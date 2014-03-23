@@ -1,6 +1,7 @@
 var MiniProfiler = (function () {
     "use strict";
     var $,
+        jQuery, // jQuery object used by profiled app.
         _
         ;
 
@@ -592,7 +593,7 @@ var MiniProfiler = (function () {
         };
 
         // we need to attach our ajax complete handler to the window's (profiled app's) copy, not our internal, no conflict version
-        var window$ = window.jQuery;
+        var window$ = jQuery || window.jQuery;
 
         // fetch profile results for any ajax calls
         if (window$ && window$(document) && window$(document).ajaxComplete) {
@@ -696,12 +697,13 @@ var MiniProfiler = (function () {
 
     return {
 
-        init: function () {
+        init: function (jquery) {
             var script = document.getElementById('mini-profiler');
             if (!script || !script.getAttribute) return;
 
             $ = MiniProfiler.$;
             _ = MiniProfiler._;
+            jQuery = jquery;
 
             options = (function () {
                 var version = script.getAttribute('data-version');
@@ -997,7 +999,8 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 MiniProfiler._ = _.noConflict();
 MiniProfiler.$ = $.noConflict(true);
 
-MiniProfiler.init();
+// Comment out init(). Profiled app calls .init(jQuery) instead.
+// MiniProfiler.init();
 
 // jquery.hotkeys.js
 // https://github.com/jeresig/jquery.hotkeys/blob/master/jquery.hotkeys.js
